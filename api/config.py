@@ -1,8 +1,8 @@
 # Database Configuration
 DATABASE_CONFIG = {
-    'user': 'Ade3164',
-    'password': 'Adebayo1212.',
+    'user': '***',
+    'password': '***.',
     'host': 'localhost',  
-    'database': 'mydb',
+    'database': 'Database name',
     'port': 3306,  
 }
