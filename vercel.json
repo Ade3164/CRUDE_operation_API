@@ -1,23 +1,23 @@
 {
   "functions": {
-    "api/stage2/app.py": {
+    "api/app.py": {
       "runtime": "python@3.8"
     }
   },
   "routes": [
     {
       "src": "/api/persons",
-      "dest": "api/stage2/app.py",
+      "dest": "api/app.py",
       "methods": ["GET", "POST"]
     },
     {
       "src": "/api/persons/:id",
-      "dest": "api/stage2/app.py",
+      "dest": "api/app.py",
       "methods": ["GET", "PUT", "DELETE"]
     },
     {
       "src": "/api/persons/:name",
-      "dest": "api/stage2/app.py",
+      "dest": "api/app.py",
       "methods": ["GET"]
     }
   ]
