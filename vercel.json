@@ -1,24 +1,14 @@
 {
-  "functions": {
-    "api/app.py": {
-      "runtime": "python@3.8"
-    }
-  },
+  "builds": [
+      {
+          "src": "api/app.py",
+          "use": "@vercel/python"
+      }
+  ],
   "routes": [
-    {
-      "src": "/api/persons",
-      "dest": "api/app.py",
-      "methods": ["GET", "POST"]
-    },
-    {
-      "src": "/api/persons/:id",
-      "dest": "api/app.py",
-      "methods": ["GET", "PUT", "DELETE"]
-    },
-    {
-      "src": "/api/persons/:name",
-      "dest": "api/app.py",
-      "methods": ["GET"]
-    }
+      {
+          "src": "/(.*)",
+          "dest": "api/app.py"
+      }
   ]
 }
