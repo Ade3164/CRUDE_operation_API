@@ -11,7 +11,7 @@ load_dotenv()
 app = Flask(__name__)
 
 # Connect to postgress database using psycopg and the env variable.
-url = 'postgres://mydatabase_qd6z_user:F8joLE0vNlQeEoPZd4I2F56np3pQ6ppx@dpg-ck1l2ohgbqfc73ahann0-a.oregon-postgres.render.com/mydatabase_qd6z'
+url = 'postgres://mydatabase_qd6z_user:F8joLE0vNlQeEoPZd4I2F56np3pQ6ppx@dpg-ck1l2ohgbqfc73ahann0-a/mydatabase_qd6z'
 connection = psycopg2.connect(url)
 
 # Create table using model
