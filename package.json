@@ -10,11 +10,12 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "build": "some-build-script"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["API", "Node.js", "Express", "PostgreSQL"],
+  "author": "Your Name",
   "license": "ISC",
   "devDependencies": {},
-  "description": ""
+  "description": "A Node.js API using Express and PostgreSQL for CRUD operations."
 }
