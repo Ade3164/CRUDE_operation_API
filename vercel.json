@@ -1,24 +1,14 @@
 {
-    "version": 2,
-    "builds": [
+  "builds": [
       {
-        "src": "/app.js", 
-        "use": "@vercel/node"
+          "src": "Myapi/app.py",
+          "use": "@vercel/node"
       }
-    ],
-    "routes": [
+  ],
+  "routes": [
       {
-        "src": "/api/persons/([^/]+)",
-        "dest": "/api/persons?id=$1"
-      },
-      {
-        "src": "/api/persons/([^/]+)/?$",
-        "dest": "/api/persons?name=$1"
-      },
-      {
-        "src": "/api/persons",
-        "dest": "/api/persons"
+          "src": "/(.*)",
+          "dest": "Myapi/app.py"
       }
-    ]
-  }
-  
+  ]
+}
