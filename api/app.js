@@ -27,9 +27,11 @@ db.none(createTableQuery)
   .catch((error) => {
     console.error("Error creating table 'Persons':", error);
   });
+ 
   app.get('/', (req, res) => {
     res.send('Welcome to My API ');
   });
+  
 // Get a person by ID or Name
 app.get("/api/persons/:param", (req, res) => {
   const param = req.params.param;
