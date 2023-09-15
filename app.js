@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const pgp = require("pg-promise")();
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 1000;
 
 app.use(bodyParser.json());
 
@@ -27,7 +27,9 @@ db.none(createTableQuery)
   .catch((error) => {
     console.error("Error creating table 'Persons':", error);
   });
-
+  app.get('/', (req, res) => {
+    res.send('Welcome to My API ');
+  });
 // Get a person by ID or Name
 app.get("/api/persons/:param", (req, res) => {
   const param = req.params.param;
