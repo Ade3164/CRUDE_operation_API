@@ -10,8 +10,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "build": "some-build-script"
+    "start": "node app.js"
   },
   "keywords": ["API", "Node.js", "Express", "PostgreSQL"],
   "author": "Your Name",
