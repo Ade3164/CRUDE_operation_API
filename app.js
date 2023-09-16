@@ -1,7 +1,7 @@
-require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const pgp = require("pg-promise")();
+require("dotenv").config();
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -27,11 +27,26 @@ db.none(createTableQuery)
   .catch((error) => {
     console.error("Error creating table 'Persons':", error);
   });
- 
-  app.get('/', (req, res) => {
-    res.send('Welcome to My API ');
-  });
-  
+
+// Middleware for JSON responses
+app.use((req, res, next) => {
+  res.setHeader("Content-Type", "application/json");
+  next();
+});
+
+// Get all persons
+app.get("/api/persons", (req, res) => {
+  db.manyOrNone("SELECT * FROM Persons")
+    .then((persons) => {
+      // Return individual person records, not an array
+      res.json(persons);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: "Database error" });
+    });
+});
+
 // Get a person by ID or Name
 app.get("/api/persons/:param", (req, res) => {
   const param = req.params.param;
@@ -43,26 +58,30 @@ app.get("/api/persons/:param", (req, res) => {
     db.oneOrNone("SELECT * FROM Persons WHERE id = $1", [personId])
       .then((result) => {
         if (result) {
-          return res.json(result);
+          // Return individual person record, not an array
+          res.json(result);
+        } else {
+          res.status(404).json({ error: "Person not found" });
         }
-        return res.status(404).json({ error: "Person not found" });
       })
       .catch((err) => {
         console.error(err);
-        return res.status(500).json({ error: "Database error" });
+        res.status(500).json({ error: "Database error" });
       });
   } else {
     // If param is not numeric, assume it's a Name
     db.manyOrNone("SELECT * FROM Persons WHERE name = $1", [param])
       .then((result) => {
         if (result.length > 0) {
-          return res.json(result);
+          // Return individual person records, not an array
+          res.json(result);
+        } else {
+          res.status(404).json({ error: "Person not found" });
         }
-        return res.status(404).json({ error: "Person not found" });
       })
       .catch((err) => {
         console.error(err);
-        return res.status(500).json({ error: "Database error" });
+        res.status(500).json({ error: "Database error" });
       });
   }
 });
@@ -75,15 +94,16 @@ app.post("/api/persons", (req, res) => {
   }
   db.one("INSERT INTO Persons (name) VALUES ($1) RETURNING *", [name])
     .then((result) => {
-      return res.status(201).json(result);
+      // Return individual person record, not an array
+      res.json(result);
     })
     .catch((err) => {
       console.error(err);
-      return res.status(500).json({ error: "Database error" });
+      res.status(500).json({ error: "Database error" });
     });
 });
 
-// Update a person by ID or Name
+// Update a person by ID
 app.put("/api/persons/:param", (req, res) => {
   const param = req.params.param;
 
@@ -97,13 +117,15 @@ app.put("/api/persons/:param", (req, res) => {
     db.oneOrNone("UPDATE Persons SET name = $1 WHERE id = $2 RETURNING *", [name, personId])
       .then((result) => {
         if (result) {
-          return res.json(result);
+          // Return individual person record, not an array
+          res.json(result);
+        } else {
+          res.status(404).json({ error: "Person not found" });
         }
-        return res.status(404).json({ error: "Person not found" });
       })
       .catch((err) => {
         console.error(err);
-        return res.status(500).json({ error: "Database error" });
+        res.status(500).json({ error: "Database error" });
       });
   } else {
     // If param is not numeric, assume it's a Name
@@ -114,13 +136,15 @@ app.put("/api/persons/:param", (req, res) => {
     db.oneOrNone("UPDATE Persons SET name = $1 WHERE name = $2 RETURNING *", [newName, param])
       .then((result) => {
         if (result) {
-          return res.json(result);
+          // Return individual person record, not an array
+          res.json(result);
+        } else {
+          res.status(404).json({ error: "Person not found" });
         }
-        return res.status(404).json({ error: "Person not found" });
       })
       .catch((err) => {
         console.error(err);
-        return res.status(500).json({ error: "Database error" });
+        res.status(500).json({ error: "Database error" });
       });
   }
 });
@@ -134,21 +158,21 @@ app.delete("/api/persons/:param", (req, res) => {
     const personId = parseInt(param);
     db.none("DELETE FROM Persons WHERE id = $1", [personId])
       .then(() => {
-        return res.json({ message: "Person deleted" });
+        res.json({ message: "Person deleted" });
       })
       .catch((err) => {
         console.error(err);
-        return res.status(500).json({ error: "Database error" });
+        res.status(500).json({ error: "Database error" });
       });
   } else {
     // If param is not numeric, assume it's a Name
     db.none("DELETE FROM Persons WHERE name = $1", [param])
       .then(() => {
-        return res.json({ message: "Person deleted" });
+        res.json({ message: "Person deleted" });
       })
       .catch((err) => {
         console.error(err);
-        return res.status(500).json({ error: "Database error" });
+        res.status(500).json({ error: "Database error" });
       });
   }
 });

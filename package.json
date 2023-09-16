@@ -12,9 +12,14 @@
   "scripts": {
     "start": "node app.js"
   },
-  "keywords": ["API", "Node.js", "Express", "PostgreSQL"],
+  "keywords": [
+    "API",
+    "Node.js",
+    "Express",
+    "PostgreSQL"
+  ],
   "author": "Your Name",
   "license": "ISC",
-  "devDependencies": {},
-  "description": "A Node.js API using Express and PostgreSQL for CRUD operations."
+  "description": "A Node.js API using Express and PostgreSQL for CRUD operations.",
+  "devDependencies": {}
 }
