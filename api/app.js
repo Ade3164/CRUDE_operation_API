@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const pgp = require("pg-promise")();
 
 const app = express();
-const port = process.env.PORT || 1000;
+const port = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
 
