@@ -34,148 +34,142 @@ app.use((req, res, next) => {
   next();
 });
 
-// Get all persons
-app.get("/api/persons", (req, res) => {
-  db.manyOrNone("SELECT * FROM Persons")
-    .then((persons) => {
-      // Return individual person records, not an array
-      res.json(persons);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).json({ error: "Database error" });
-    });
-});
+// Unified URL for GET, POST, PUT, and DELETE
+app.route("/api/:param?")
+  .get((req, res) => {
+    const param = req.params.param;
 
-// Get a person by ID or Name
-app.get("/api/persons/:param", (req, res) => {
-  const param = req.params.param;
+    if (!param) {
+      // Get all persons
+      db.manyOrNone("SELECT * FROM Persons")
+        .then((persons) => {
+          res.json(persons);
+        })
+        .catch((err) => {
+          console.error(err);
+          res.status(500).json({ error: "Database error" });
+        });
+    } else {
+      if (!isNaN(param)) {
+        // If param is numeric, assume it's an ID
+        const personId = parseInt(param);
 
-  if (!isNaN(param)) {
-    // If param is numeric, assume it's an ID
-    const personId = parseInt(param);
-
-    db.oneOrNone("SELECT * FROM Persons WHERE id = $1", [personId])
-      .then((result) => {
-        if (result) {
-          // Return individual person record, not an array
-          res.json(result);
-        } else {
-          res.status(404).json({ error: "Person not found" });
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).json({ error: "Database error" });
-      });
-  } else {
-    // If param is not numeric, assume it's a Name
-    db.manyOrNone("SELECT * FROM Persons WHERE name = $1", [param])
-      .then((result) => {
-        if (result.length > 0) {
-          // Return individual person records, not an array
-          res.json(result);
-        } else {
-          res.status(404).json({ error: "Person not found" });
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).json({ error: "Database error" });
-      });
-  }
-});
-
-// Create a new person
-app.post("/api/persons", (req, res) => {
-  const { name } = req.body;
-  if (!name) {
-    return res.status(400).json({ error: "Invalid data" });
-  }
-  db.one("INSERT INTO Persons (name) VALUES ($1) RETURNING *", [name])
-    .then((result) => {
-      // Return individual person record, not an array
-      res.json(result);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).json({ error: "Database error" });
-    });
-});
-
-// Update a person by ID
-app.put("/api/persons/:param", (req, res) => {
-  const param = req.params.param;
-
-  if (!isNaN(param)) {
-    // If param is numeric, assume it's an ID
-    const personId = parseInt(param);
+        db.oneOrNone("SELECT * FROM Persons WHERE id = $1", [personId])
+          .then((result) => {
+            if (result) {
+              res.json(result);
+            } else {
+              res.status(404).json({ error: "Person not found" });
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: "Database error" });
+          });
+      } else {
+        // If param is not numeric, assume it's a Name
+        db.manyOrNone("SELECT * FROM Persons WHERE name = $1", [param])
+          .then((result) => {
+            if (result.length > 0) {
+              res.json(result);
+            } else {
+              res.status(404).json({ error: "Person not found" });
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: "Database error" });
+          });
+      }
+    }
+  })
+  .post((req, res) => {
     const { name } = req.body;
+
     if (!name) {
       return res.status(400).json({ error: "Invalid data" });
     }
-    db.oneOrNone("UPDATE Persons SET name = $1 WHERE id = $2 RETURNING *", [name, personId])
+
+    db.one("INSERT INTO Persons (name) VALUES ($1) RETURNING *", [name])
       .then((result) => {
-        if (result) {
-          // Return individual person record, not an array
-          res.json(result);
-        } else {
-          res.status(404).json({ error: "Person not found" });
-        }
+        res.status(201).json(result);
       })
       .catch((err) => {
         console.error(err);
         res.status(500).json({ error: "Database error" });
       });
-  } else {
-    // If param is not numeric, assume it's a Name
-    const { name: newName } = req.body;
-    if (!newName) {
+  })
+  .put((req, res) => {
+    const param = req.params.param;
+    const { name } = req.body;
+
+    if (!name) {
       return res.status(400).json({ error: "Invalid data" });
     }
-    db.oneOrNone("UPDATE Persons SET name = $1 WHERE name = $2 RETURNING *", [newName, param])
-      .then((result) => {
-        if (result) {
-          // Return individual person record, not an array
-          res.json(result);
-        } else {
-          res.status(404).json({ error: "Person not found" });
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).json({ error: "Database error" });
-      });
-  }
-});
 
-// Delete a person by ID or Name
-app.delete("/api/persons/:param", (req, res) => {
-  const param = req.params.param;
+    if (!isNaN(param)) {
+      // If param is numeric, assume it's an ID
+      const personId = parseInt(param);
 
-  if (!isNaN(param)) {
-    // If param is numeric, assume it's an ID
-    const personId = parseInt(param);
-    db.none("DELETE FROM Persons WHERE id = $1", [personId])
-      .then(() => {
-        res.json({ message: "Person deleted" });
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).json({ error: "Database error" });
-      });
-  } else {
-    // If param is not numeric, assume it's a Name
-    db.none("DELETE FROM Persons WHERE name = $1", [param])
-      .then(() => {
-        res.json({ message: "Person deleted" });
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).json({ error: "Database error" });
-      });
-  }
-});
+      db.oneOrNone("UPDATE Persons SET name = $1 WHERE id = $2 RETURNING *", [name, personId])
+        .then((result) => {
+          if (result) {
+            res.json(result);
+          } else {
+            res.status(404).json({ error: "Person not found" });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          res.status(500).json({ error: "Database error" });
+        });
+    } else {
+      // Handle PUT request for updating by name here
+      db.oneOrNone("UPDATE Persons SET name = $1 WHERE name = $2 RETURNING *", [name, param])
+        .then((result) => {
+          if (result) {
+            res.json(result);
+          } else {
+            res.status(404).json({ error: "Person not found" });
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          res.status(500).json({ error: "Database error" });
+        });
+    }
+  })
+  .delete((req, res) => {
+    const param = req.params.param;
+
+    if (!param) {
+      return res.status(400).json({ error: "Invalid data" });
+    }
+
+    if (!isNaN(param)) {
+      // If param is numeric, assume it's an ID
+      const personId = parseInt(param);
+
+      db.none("DELETE FROM Persons WHERE id = $1", [personId])
+        .then(() => {
+          res.json({ message: "Person deleted" });
+        })
+        .catch((err) => {
+          console.error(err);
+          res.status(500).json({ error: "Database error" });
+        });
+    } else {
+      // Handle DELETE request for deleting by name here
+      db.none("DELETE FROM Persons WHERE name = $1", [param])
+        .then(() => {
+          res.json({ message: "Person deleted" });
+        })
+        .catch((err) => {
+          console.error(err);
+          res.status(500).json({ error: "Database error" });
+        });
+    }
+  });
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
