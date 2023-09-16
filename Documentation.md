@@ -58,21 +58,21 @@ Before using this API, ensure you have the following prerequisites:
 
 ### Get All Persons
 
-- **URL**: `/api/persons`
+- **URL**: `/api`
 - **Method**: `GET`
 - **Description**: Retrieve a list of all persons in the database.
 - **Response**: A JSON array containing person records.
 
 ### Get Person by ID or Name
 
-- **URL**: `/api/persons/:param`
+- **URL**: `/api:param`
 - **Method**: `GET`
 - **Description**: Retrieve a person by their ID or name.
 - **Response**: A JSON object representing the person record.
 
 ### Create a New Person
 
-- **URL**: `/api/persons`
+- **URL**: `/api`
 - **Method**: `POST`
 - **Description**: Create a new person record.
 - **Request Body**: JSON object with a "name" field.
@@ -80,7 +80,7 @@ Before using this API, ensure you have the following prerequisites:
 
 ### Update a Person
 
-- **URL**: `/api/persons/:param`
+- **URL**: `/api:param`
 - **Method**: `PUT`
 - **Description**: Update a person's name by their ID or name.
 - **Request Body**: JSON object with a "name" field.
@@ -88,7 +88,7 @@ Before using this API, ensure you have the following prerequisites:
 
 ### Delete a Person
 
-- **URL**: `/api/persons/:param`
+- **URL**: `/api:param`
 - **Method**: `DELETE`
 - **Description**: Delete a person by their ID or name.
 - **Response**: A JSON object with a success message.
