@@ -1,64 +1,50 @@
- My Node.js CRUD API
+# CRUD Operation API
 
-This is a simple Node.js CRUD (Create, Read, Update, Delete) API using Express.js and PostgreSQL for database storage. It allows you to manage a list of persons with their names and perform basic CRUD operations on them.
+This is a Node.js API built with Express and PostgreSQL for performing CRUD (Create, Read, Update, Delete) operations on a "Persons" table. It provides endpoints to manage individual persons in the database.
 
- Getting Started
+## Getting Started
 
-These instructions will help you set up and run the project on your local machine for development and testing purposes.
+To get started with this API, follow these steps:
 
-Prerequisites
-
-Before you begin, ensure you have met the following requirements:
-
-- Node.js and npm (Node Package Manager) installed on your machine.
-- PostgreSQL database installed locally or a connection to a remote PostgreSQL database.
-- A text editor or IDE for code editing (e.g., Visual Studio Code).
-
- Installation
-
-Clone the repository:
+1. Clone the repository to your local machine:
 
    ```bash
-   git clone https://github.com/yourusername/my-node-crud-api.git
+   git clone https://github.com/Ade3164/CRUDE_operation_API
 
-   Navigate to the project directory:
+GET /api/1
+Response:
+{ "id": 1, "name": "John Doe" }
 
-bash
-Copy code
-cd my-node-crud-api
-Install the project dependencies:
+POST /api
+Request:
 
-bash
-Copy code
-npm install
-Create a .env file in the root directory and configure your PostgreSQL database connection. Here's an example:
+{ "name": "Alice Johnson" }
 
-env
-Copy code
-DATABASE_URL=your_database_connection_string
-Start the server:
+response 
+{ "id": 3, "name": "Alice Johnson" }
 
-bash
-Copy code
-npm start
-The API should now be running locally at http://localhost:5000.
+PUT /api/2
+Request:
+{ "name": "Updated Name" }
+response:
 
-API Endpoints
-GET /api/persons: Retrieve a list of all persons.
-GET /api/persons/:id: Retrieve a person by ID.
-GET /api/persons?name={person_name}: Retrieve a person by name.
-POST /api/persons: Create a new person.
-PUT /api/persons/:id: Update a person by ID.
-DELETE /api/persons/:id: Delete a person by ID.
-Usage
-You can use a tool like Postman to interact with the API endpoints.
+{ "id": 2, "name": "Updated Name" }
 
-Contributing
-Contributions are welcome! If you'd like to contribute to this project, please follow the standard GitHub fork and pull request process.
+DELETE /api/3
+Response:
 
-License
-This project is licensed under the MIT License - see the LICENSE.md file for details.
+{ "message": "Person deleted" }.
 
-Author: Idris  Zakariyau
+Technologies Used
+
+Node.js
+Express.js
+PostgreSQL
+pg-promise
+dotenv
 
 
+Author
+
+Name: Zakariyau Idris
+email: Adebayoidris051@gmail.com
